@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>are you gonna make it this altseason?</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#080a0f;
+  --surface:#0e1117;
+  --surface2:#161b26;
+  --border:#1e2535;
+  --accent:#00ff88;
+  --accent2:#ff3c6e;
+  --accent3:#f7c948;
+  --text:#e8eaf0;
+  --muted:#556070;
+}
+html,body{min-height:100vh;background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 60% 40% at 20% 10%,rgba(0,255,136,.06) 0%,transparent 60%),radial-gradient(ellipse 50% 50% at 80% 80%,rgba(255,60,110,.05) 0%,transparent 60%);pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,255,136,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,136,.025) 1px,transparent 1px);background-size:44px 44px;pointer-events:none;z-index:0}
+
+#app{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 18px 48px;max-width:480px;margin:0 auto}
+
+.screen{width:100%;display:none;flex-direction:column;align-items:flex-start;gap:18px;animation:fsu .4s cubic-bezier(.22,1,.36,1) forwards}
+.screen.on{display:flex}
+@keyframes fsu{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* INTRO */
+.badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);border:1px solid rgba(0,255,136,.3);padding:6px 14px;border-radius:100px;background:rgba(0,255,136,.05)}
+.intro-title{font-size:clamp(26px,7vw,36px);font-weight:800;line-height:1.1;letter-spacing:-.02em;background:linear-gradient(135deg,#fff 30%,var(--accent) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.intro-sub{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);line-height:1.7;letter-spacing:.02em}
+
+/* PRIMARY BTN */
+.btn-primary{width:100%;padding:17px 24px;background:var(--accent);color:#000;border:none;border-radius:14px;font-family:'Syne',sans-serif;font-size:16px;font-weight:800;cursor:pointer;transition:transform .15s,box-shadow .15s;letter-spacing:.01em}
+.btn-primary:active{transform:scale(.97);box-shadow:0 0 20px rgba(0,255,136,.3)}
+
+/* GHOST BTN */
+.btn-ghost{background:none;border:1px solid var(--border);color:var(--muted);border-radius:10px;padding:12px 20px;font-family:'Space Mono',monospace;font-size:12px;cursor:pointer;transition:all .15s;letter-spacing:.05em;width:100%}
+.btn-ghost:active{border-color:var(--accent);color:var(--accent);transform:scale(.97)}
+
+/* PROGRESS */
+.pbar-wrap{width:100%;display:flex;flex-direction:column;gap:7px}
+.pbar-top{display:flex;justify-content:space-between;align-items:center}
+.pbar-lbl{font-family:'Space Mono',monospace;font-size:11px;color:var(--accent);letter-spacing:.1em}
+.pbar-pct{font-family:'Space Mono',monospace;font-size:11px;color:var(--muted)}
+.ptrack{width:100%;height:2px;background:var(--surface2);border-radius:100px;overflow:hidden}
+.pfill{height:100%;background:linear-gradient(90deg,var(--accent),#00ccff);border-radius:100px;transition:width .4s cubic-bezier(.22,1,.36,1);box-shadow:0 0 8px rgba(0,255,136,.4)}
+
+/* QUESTION */
+.qlbl{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.15em}
+.qtext{font-size:clamp(17px,4.5vw,22px);font-weight:700;line-height:1.25;letter-spacing:-.01em}
+
+/* OPTIONS */
+.opts{width:100%;display:flex;flex-direction:column;gap:9px}
+.opt{width:100%;padding:15px 16px;background:var(--surface);border:1px solid var(--border);border-radius:13px;color:var(--text);font-family:'Syne',sans-serif;font-size:14px;cursor:pointer;text-align:left;display:flex;align-items:flex-start;gap:11px;transition:all .15s;line-height:1.4}
+.opt:active{transform:scale(.98);border-color:var(--accent);background:rgba(0,255,136,.05)}
+.opt.sel{border-color:var(--accent);background:rgba(0,255,136,.06);animation:pop .2s ease}
+@keyframes pop{0%{transform:scale(1)}50%{transform:scale(.97)}100%{transform:scale(1)}}
+.opt-key{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);background:var(--surface2);border:1px solid var(--border);border-radius:5px;width:23px;height:23px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all .15s}
+.opt.sel .opt-key{color:var(--accent);border-color:var(--accent);background:rgba(0,255,136,.12)}
+
+/* RESULT */
+.res-emoji{font-size:56px;line-height:1;width:100%;text-align:center;animation:epop .5s cubic-bezier(.34,1.56,.64,1) .1s both}
+@keyframes epop{from{transform:scale(0) rotate(-8deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+.res-tag{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent3);border:1px solid rgba(247,201,72,.3);padding:5px 14px;border-radius:100px;background:rgba(247,201,72,.05);align-self:center}
+.res-title{font-size:clamp(20px,5.5vw,28px);font-weight:800;text-align:center;letter-spacing:-.02em;line-height:1.15;width:100%}
+.res-lines{width:100%;display:flex;flex-direction:column;gap:0;background:var(--surface);border:1px solid var(--border);border-radius:13px;overflow:hidden}
+.res-line{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);line-height:1.7;padding:12px 16px;border-bottom:1px solid var(--border)}
+.res-line:last-child{border-bottom:none}
+.res-line strong{color:var(--text);font-weight:700}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;width:100%}
+.stat{padding:11px 6px;background:var(--surface);border:1px solid var(--border);border-radius:10px;text-align:center;display:flex;flex-direction:column;gap:3px}
+.stat-n{font-family:'Space Mono',monospace;font-size:17px;font-weight:700;color:var(--muted)}
+.stat-n.win{color:var(--accent)}
+.stat-k{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.divider{width:100%;height:1px;background:var(--border)}
+.share-btn{width:100%;padding:16px;background:transparent;border:1px solid var(--border);border-radius:13px;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;cursor:pointer;color:var(--text);display:flex;align-items:center;justify-content:center;gap:9px;transition:all .15s}
+.share-btn:active{transform:scale(.97);border-color:var(--text)}
+.x-logo{font-family:'Space Mono',monospace;font-size:14px;font-weight:700}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- INTRO -->
+  <div class="screen on" id="s-intro">
+    <div class="badge">🔥 altseason personality check</div>
+    <div class="intro-title">are you gonna make it this altseason or just be exit liquidity?</div>
+    <div class="intro-sub">7 questions. ruthless accuracy. no hopium spared.</div>
+    <button class="btn-primary" onclick="startQuiz()">find out who you are →</button>
+    <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);width:100%;text-align:center;letter-spacing:.05em">not financial advice. obviously.</div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="screen" id="s-quiz">
+    <div class="pbar-wrap">
+      <div class="pbar-top">
+        <span class="pbar-lbl" id="q-counter">Q 1/7</span>
+        <span class="pbar-pct" id="q-pct">0%</span>
+      </div>
+      <div class="ptrack"><div class="pfill" id="pfill" style="width:0%"></div></div>
+    </div>
+    <div class="qlbl" id="q-lbl">QUESTION 01</div>
+    <div class="qtext" id="q-text"></div>
+    <div class="opts" id="opts"></div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="screen" id="s-result">
+    <div class="res-tag" id="r-tag"></div>
+    <div class="res-emoji" id="r-emoji"></div>
+    <div class="res-title" id="r-title"></div>
+    <div class="res-lines" id="r-lines"></div>
+    <div class="stats" id="r-stats"></div>
+    <div class="divider"></div>
+    <button class="share-btn" onclick="shareX()"><span class="x-logo">𝕏</span> share your result</button>
+    <button class="btn-ghost" onclick="restart()">↩ try again</button>
+  </div>
+
+</div>
+<script>
+const Qs=[
+  {t:"you wake up… first move?",opts:["charts. straight dopamine","open X, look for \"alpha\"","coffee first like a normal human","i don't even check markets anymore"]},
+  {t:"market nukes -20%",opts:["buy more. thank you market","hold and pray","reduce risk","sell everything and hate myself"]},
+  {t:"your mindset",opts:["\"this cycle is DIFFERENT\"","\"just be patient\"","\"risk management matters\"","\"i'm tired boss\""]},
+  {t:"new coin trending",opts:["ape instantly","quick research then ape","watch from distance","seen this movie before"]},
+  {t:"portfolio check",opts:["90% altcoins","alt + some btc","memecoins","stables + trauma"]},
+  {t:"X usage",opts:["i farm content","i post real alpha","i just shitpost","i've lost faith in humanity"]},
+  {t:"6 months from now",opts:["rich (in my head at least)","decent profit","same place","REKT"]}
+];
+
+const Results={
+  A:{
+    emoji:"🚀",
+    tag:"delusion level: max",
+    title:'"i will retire this cycle" guy',
+    lines:[
+      'you\'ve said <strong>"this is generational wealth"</strong> at least 7 times this week.',
+      "your portfolio is <strong>95% vibes, 5% logic.</strong>",
+      "you will either disappear rich… or just disappear."
+    ],
+    share:"i took the altseason quiz and i'm the \"i will retire this cycle\" guy 🚀\n\ndelusion level: max. portfolio: 95% vibes, 5% logic.\n\nare you gonna make it or just be exit liquidity?"
+  },
+  B:{
+    emoji:"📈",
+    tag:"(you don't)",
+    title:'"i know what i\'m doing"',
+    lines:[
+      "you think you're balanced but <strong>one green candle away from full ape mode.</strong>",
+      "you say <strong>\"i'll take profits\"</strong> but we both know you won't.",
+      "exit plan = vibes."
+    ],
+    share:"i took the altseason quiz and i'm the \"i know what i'm doing\" guy 📈\n\nspoiler: i don't. one green candle from full ape mode. exit plan = vibes.\n\nare you gonna make it or just be exit liquidity?"
+  },
+  C:{
+    emoji:"🧮",
+    tag:"lowkey smartest, highkey boring",
+    title:"risk manager final boss",
+    lines:[
+      "you sleep peacefully while others get liquidated.",
+      "you won't make crazy gains… but you <strong>also won't cry at 4AM.</strong>",
+      "lowkey the smartest. highkey the most boring."
+    ],
+    share:"i took the altseason quiz and i'm the risk manager final boss 🧮\n\nwon't get rich. won't get rekt. sleeping fine at 4AM.\n\nare you gonna make it or just be exit liquidity?"
+  },
+  D:{
+    emoji:"🪖",
+    tag:"seen it all. still here.",
+    title:"battle-scarred veteran",
+    lines:[
+      "you've seen rugs, scams, fake pumps, fake gurus… <strong>everything.</strong>",
+      "you don't chase anymore. you just stare.",
+      "and somehow… <strong>you'll re-enter at the top again.</strong>"
+    ],
+    share:"i took the altseason quiz and i'm the battle-scarred veteran 🪖\n\nseen rugs, scams, fake pumps. don't chase. just stare. will re-enter at the top again.\n\nare you gonna make it or just be exit liquidity?"
+  }
+};
+
+const Keys=["A","B","C","D"];
+let cur=0,score={A:0,B:0,C:0,D:0},winner="";
+
+function show(id){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("on"));
+  document.getElementById(id).classList.add("on");
+}
+
+function startQuiz(){cur=0;score={A:0,B:0,C:0,D:0};show("s-quiz");render();}
+
+function render(){
+  const q=Qs[cur];
+  const pct=Math.round((cur/Qs.length)*100);
+  document.getElementById("q-counter").textContent="Q "+(cur+1)+"/7";
+  document.getElementById("q-pct").textContent=pct+"%";
+  document.getElementById("pfill").style.width=pct+"%";
+  document.getElementById("q-lbl").textContent="QUESTION "+String(cur+1).padStart(2,"0");
+  document.getElementById("q-text").textContent=q.t;
+  const wrap=document.getElementById("opts");
+  wrap.innerHTML="";
+  q.opts.forEach((o,i)=>{
+    const b=document.createElement("button");
+    b.className="opt";
+    b.innerHTML='<span class="opt-key">'+Keys[i]+'</span><span>'+o+'</span>';
+    b.onclick=()=>pick(i,b);
+    wrap.appendChild(b);
+  });
+}
+
+function pick(i,btn){
+  document.querySelectorAll(".opt").forEach(b=>b.onclick=null);
+  btn.classList.add("sel");
+  score[Keys[i]]++;
+  setTimeout(()=>{cur++;cur<Qs.length?render():showResult();},360);
+}
+
+function showResult(){
+  winner=Object.entries(score).sort((a,b)=>b[1]-a[1])[0][0];
+  const r=Results[winner];
+  document.getElementById("r-emoji").textContent=r.emoji;
+  document.getElementById("r-title").textContent=r.title;
+  document.getElementById("r-tag").textContent="📊 "+r.tag;
+  document.getElementById("r-lines").innerHTML=r.lines.map(l=>'<div class="res-line">'+l+'</div>').join("");
+  document.getElementById("r-stats").innerHTML=Object.entries(score).map(([k,v])=>
+    '<div class="stat"><div class="stat-n'+(k===winner?" win":"")+'">'+v+'</div><div class="stat-k">'+k+' picks</div></div>'
+  ).join("");
+  show("s-result");
+}
+
+function shareX(){
+  window.open("https://twitter.com/intent/tweet?text="+encodeURIComponent(Results[winner].share),"_blank");
+}
+
+function restart(){show("s-intro");}
+</script>
+</body>
+</html>
